@@ -34,7 +34,7 @@ def login():
         #check if accoutnt exists using in mysql 
         # MySQLdb.cursors.DictCursor เราจะใช้ก็ต่อเมื่อค่าของ input ที่รับเข้ามานั้นมี type ที่แตกต่างกัน 
         cursor  = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute("SELECT * FROM fitness.member WHERE user = %s and password = %s" ,(username,password))
+        cursor.execute("SELECT * FROM  fitness.member_test WHERE username = %s and password = %s" ,(username,password))
         account = cursor.fetchone()
 
 
@@ -45,11 +45,11 @@ def login():
             session['loggedin'] = True
             session['id'] = account['id']
             #we will compare  user in mysql and session input form html 
-            session['username'] = account['user']
+            session['username'] = account['username']
 
             # Redirect to homepage
 
-            return 'Logged in successfully!!'
+            return redirect(url_for("home"))
 
 
         else: 
@@ -92,7 +92,7 @@ def register():
 
         else:
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            cursor.execute("SELECT * FROM fitness.member_test WHERE user = %s", (username,))
+            cursor.execute("SELECT * FROM fitness.member_test WHERE username = %s", (username,))
             account = cursor.fetchone()
 
             if account:
@@ -106,7 +106,17 @@ def register():
 
     
 
+#Home page 
+@app.route('/home')
+def home():
+    #chekc if user is loggedin 
+    if 'loggedin' in session :
+        # user is loggedin show them the home 
+        return render_template('home.html', username = session['username'])
+    # User is not login   redirect to login page
 
+
+    return redirect(url_for("login"))
 
 
 
