@@ -34,7 +34,7 @@ def login():
         #check if accoutnt exists using in mysql 
         # MySQLdb.cursors.DictCursor เราจะใช้ก็ต่อเมื่อค่าของ input ที่รับเข้ามานั้นมี type ที่แตกต่างกัน 
         cursor  = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute("SELECT * FROM  fitness.member_test WHERE username = %s and password = %s" ,(username,password))
+        cursor.execute("SELECT * FROM  fitness.members  WHERE username = %s and password = %s" ,(username,password))
         account = cursor.fetchone()
 
 
@@ -92,13 +92,13 @@ def register():
 
         else:
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            cursor.execute("SELECT * FROM fitness.member_test WHERE username = %s", (username,))
+            cursor.execute("SELECT * FROM fitness.members  WHERE username = %s", (username,))
             account = cursor.fetchone()
 
             if account:
                 msg = 'An account with this username already exists!'
             else:
-                cursor.execute('INSERT INTO fitness.member_test VALUES (NULL, %s, %s, %s)', (username, password, email))
+                cursor.execute('INSERT INTO fitness.members  VALUES (NULL, %s, %s, %s)', (username, password, email))
                 mysql.connection.commit()
                 msg = 'Account created successfully!'
 
