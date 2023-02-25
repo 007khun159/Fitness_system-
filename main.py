@@ -114,9 +114,82 @@ def home():
         # user is loggedin show them the home 
         return render_template('home.html', username = session['username'])
     # User is not login   redirect to login page
-
-
     return redirect(url_for("login"))
+
+
+
+#Product buy 
+@app.route('/buy',methods = [ "GET" , "POST"])
+def buy():
+    #ใช้ในขณะเราอยู่ที่หน้า buy สินค้า ทำการ login หรือไม่ก็ตาม
+    
+    if 'loggedin' in session:
+        if request.method == "POST": 
+            #Get item id from the form submission
+            item_id = request.form['item_id']
+    
+
+            #Qurey the database to get the item information
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor.execute("SELECT * FROM fitness.products where id = %s " ,(item_id,))
+            #ทำการ fetchone กรองข้อมุลออกมาแบบเลือกเป็นตัวๆ 
+            item = cursor.fetchone()
+
+
+            #Add the item to user order history 
+            #ต้องทำการสร้างตารางเข้ามาเพิ่มเพื่อเก็บข้อมูลของ user
+            #ภายใน Column ต้องมี user_id   item_id และข้อมูลที่ทำการร้องของของ session['id'], item['id']
+            cursor.execute("INSEART INTO fitness.purcheses  (user_id , item_id) VALUES (%s , %s ) ",session['id'], item['id'] )
+            mysql.connection.commit()
+
+            return render_template('buy.html' , message = "Thank you for your purchase" )
+
+        else : 
+            #Query the database to get all the avaliable product 
+            #ถ้าเกิดข้อมูลมีการจองไว้อยู่แล้ว
+
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor.execute("SELECT * FROM  fitness.products")
+            items = cursor.fetchall()
+
+
+            return render_template('buy.html' , items = items )
+
+
+    else:
+        # Redirect page user to the login page if they are not loggedin 
+        return redirect(url_for('login'))
+
+
+
+
+
+
+# @app.route('/buy' , methods = ["GET" , "POST"])
+# def buy_product():
+
+#     if 'loggedin' in session : 
+#     #Get ID from the request from Data
+
+#         item_id  = request.form.get("item_id")
+
+#         #Get the current user' ID from the session 
+#         user_id = session["id"]
+
+#        #check Item id for purches on Database
+#        # ยังไม่จำเป็นที่ต้องใช้
+#         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+#         cursor.execute("SELECT * FROM fitness.product WHERE id = %s ",(item_id , ))
+#         items = cursor.fetchone()
+
+#         #Inseart Data into database 
+#         cursor.execute("INSEART  INTO purchases  (user_id , item_id ) VALUES (%s , %s )", (user_id , item_id))
+#         mysql.connection.commit()
+
+
+#         return render_template('buy.html')
+         
+
 
 
 
