@@ -3,20 +3,33 @@
 {% block title %}Buy{% endblock %}
 
 {% block content %}
-<form method="POST">
-    <div class="form-group">
-      <label for="item">Item:</label>
-      <select class="form-control" id="item" name="item">
-        <option value="">-- Select item --</option>
-        {% for item in items %}
-          <option value="{{ item.id }}">{{ item.name }}</option>
-        {% endfor %}
-      </select>
-    </div>
-    <div class="form-group">
-      <label for="quantity">Quantity:</label>
-      <input type="number" class="form-control" id="quantity" name="quantity" min="1" value="1">
-    </div>
-    <button type="submit" class="btn btn-primary">Buy</button>
-  </form>
+
+<body>
+	<h1>Available Products</h1>
+<!-------------เป็นคำสั่งที่ใช้ในการสร้าง If - else ภายในตัวของ Html  --------------------->
+	{% if 'loggedin' in session %}
+		{% if message %}
+			<p>{{ message }}</p>
+		{% endif %}
+
+		<form method="post" action="/buy">
+			{% for item in items %}
+				<div>
+					<h2>{{ item['name'] }}</h2>
+					<p>{{ item['detail'] }}</p>
+					<p>{{ item['price'] }}</p>
+					<input type="hidden" name="item_id" value="{{ item['id'] }}">
+					<input type="submit" value="Buy">
+				</div>
+			{% endfor %}
+		</form>
+	{% else %}
+		<p>Please log in to buy products.</p>
+	{% endif %}
+</body>
+
+
+
+
+
 {% endblock %}

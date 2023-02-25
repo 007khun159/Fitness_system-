@@ -44,6 +44,9 @@ def login():
         # Create session data , for acess this  data in other route
             session['loggedin'] = True
             session['id'] = account['id']
+            print(session['id'])
+            print(account['id'])
+            print(session['loggedin'])
             #we will compare  user in mysql and session input form html 
             session['username'] = account['username']
 
@@ -139,7 +142,7 @@ def buy():
             #Add the item to user order history 
             #ต้องทำการสร้างตารางเข้ามาเพิ่มเพื่อเก็บข้อมูลของ user
             #ภายใน Column ต้องมี user_id   item_id และข้อมูลที่ทำการร้องของของ session['id'], item['id']
-            cursor.execute("INSEART INTO fitness.purcheses  (user_id , item_id) VALUES (%s , %s ) ",session['id'], item['id'] )
+            cursor.execute("INSERT INTO fitness.purcheses  (user_id , item_id) VALUES (%s , %s ) ",(session['id'], item['id']) )
             mysql.connection.commit()
 
             return render_template('buy.html' , message = "Thank you for your purchase" )
