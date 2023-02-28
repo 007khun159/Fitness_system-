@@ -168,33 +168,6 @@ def buy():
 
 
 
-# @app.route('/buy' , methods = ["GET" , "POST"])
-# def buy_product():
-
-#     if 'loggedin' in session : 
-#     #Get ID from the request from Data
-
-#         item_id  = request.form.get("item_id")
-
-#         #Get the current user' ID from the session 
-#         user_id = session["id"]
-
-#        #check Item id for purches on Database
-#        # ยังไม่จำเป็นที่ต้องใช้
-#         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-#         cursor.execute("SELECT * FROM fitness.product WHERE id = %s ",(item_id , ))
-#         items = cursor.fetchone()
-
-#         #Inseart Data into database 
-#         cursor.execute("INSEART  INTO purchases  (user_id , item_id ) VALUES (%s , %s )", (user_id , item_id))
-#         mysql.connection.commit()
-
-
-#         return render_template('buy.html')
-         
-
-
-
 
 if __name__ == "__main__":
     app.run(debug= True)
